@@ -1,10 +1,10 @@
 <template>
-  <form action="">
-    <input
-      class=" mt-6 w-full rounded-lg border-solid border-2 text-blue border-gray-blue p-3  text-md shadow-sm placeholder-dark-blue"
+  <form @submit.prevent="handleSubmit">
+    <input v-model="password"
+      class="mt-6 w-full rounded-lg border-solid border-2 text-blue border-gray-blue p-3 text-md shadow-sm placeholder-dark-blue"
       type="password" placeholder="Insira uma senha" />
     <button type="submit"
-      class="w-full mt-6 flex justify-center items-center gap-2 rounded-lg bg-blue-100 p-3 font-medium text-lg  text-white transition hover:brightness-95 focus:outline-none">
+      class="w-full mt-6 flex justify-center items-center gap-2 rounded-lg bg-blue-100 p-3 font-medium text-lg text-white transition hover:brightness-95 focus:outline-none">
       <Users />
       Criar Sala
     </button>
@@ -12,5 +12,18 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { Users } from 'lucide-vue-next'
+import { useRoom } from '@/composables/useRoom'
+import { useRouter } from 'vue-router'
+
+const password = ref('')
+const router = useRouter()
+const { createRoom } = useRoom()
+
+const handleSubmit = async () => {
+  const room = await createRoom(password.value)
+  localStorage.setItem(`room_${room.code}`, room.id)
+  router.push(`/room/${room.code}`)
+}
 </script>
