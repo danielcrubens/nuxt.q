@@ -1,0 +1,25 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Room {
+  id        String    @id @default(uuid())
+  code      String    @unique
+  password  String
+  questions Question[]
+}
+
+model Question {
+  id        String   @id @default(uuid())
+  content   String
+  isRead    Boolean  @default(false)
+  roomId    String
+  room      Room     @relation(fields: [roomId], references: [id])
+}
