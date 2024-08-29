@@ -2,7 +2,7 @@
   <HeaderRoom />
   <section class="lg:px-36 px-4">
     <h1 class="title py-4">Faça sua pergunta</h1>
-    <FormQuestion :roomCode="roomCode" @question-created="fetchQuestions" />
+    <FormQuestion @question-created="fetchQuestions" />
     <Questions :questions="questions" @question-updated="fetchQuestions" />
   </section>
 </template>
