@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
   if (!room) {
     throw createError({
       statusCode: 404,
-      message: 'Room not found',
+      message: 'Essa sala não existe!',
     })
   }
 
