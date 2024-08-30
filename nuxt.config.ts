@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss", "@nuxtjs/google-fonts"],
+  modules: ["@nuxtjs/tailwindcss", "@nuxtjs/google-fonts","@prisma/nuxt"],
 
   components: true,
 
@@ -15,4 +15,15 @@ export default defineNuxtConfig({
       Poppins: [400, 500, 700],
     },
   },
+  /* prisma: {
+    clientOptions: {
+      datasources: {
+        db: {
+          url: 'file:./dev.db'
+        }
+      }
+    }
+  } */
+    ssr: false,
+
 });
