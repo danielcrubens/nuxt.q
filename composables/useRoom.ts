@@ -1,5 +1,3 @@
-// composables/useRoom.ts
-
 export const useRoom = () => {
   const createRoom = async (password: string) => {
     const { data } = await useFetch('/api/create-room', {
@@ -9,10 +7,10 @@ export const useRoom = () => {
     return data.value
   }
 
-  const enterRoom = async (code: string) => {
+  const enterRoom = async (id: string) => {
     const { data } = await useFetch('/api/enter-room', {
       method: 'POST',
-      body: { code },
+      body: { id },
     })
     return data.value
   }
