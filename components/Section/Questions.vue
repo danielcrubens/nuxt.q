@@ -1,7 +1,5 @@
 <template>
   <section>
-    <p> Número de perguntas - {{ questions.length }}</p>
-    
     <div v-if="loading">
       <p>Carregando perguntas...</p>
     </div>
@@ -14,11 +12,11 @@
           <p class="text-blue">{{ question.content }}</p>
         </div>
         <div class="flex justify-end items-center gap-6">
-          <button @click="markAsRead(question.id)" class="flex items-center"><!--  @click="showModalCheck = true"  -->
+          <button @click="showModalCheck = true" class="flex items-center">
             <CheckIcon :size="18" color="#3485ff" />
             <p class="text-blue-100">Marcar como lida</p>
           </button>
-          <button @click="handleDeleteQuestion(question.id)" class="flex items-center"><!-- @click="showModalDelete = true" -->
+          <button @click="openDeleteModal(question)" class="flex items-center">
             <Trash :size="18" color="#E83F5B" />
             <p class="text-[#E83F5B]">Excluir</p>
           </button>
@@ -26,14 +24,21 @@
       </div>
     </div>
     <div v-else class="flex flex-col justify-center items-center">
-      <img class="w-28 lg:w-36 mx-auto pb-5" src="@/assets/images/noquestions.svg" alt="Sem perguntas">
+      <img class="w-28 lg:w-36 mx-auto mt-8 py-5" src="@/assets/images/noquestions.svg" alt="Sem perguntas">
       <p>Nenhuma pergunta por aqui...</p>
       <p>Faça sua primeira pergunta e envie o <br>código dessa sala para outras pessoas!</p>
     </div>
-    <Check :isVisible="showModalCheck" @close="showModalCheck = false"/>    
-    <Delete :isVisible="showModalDelete" @close="showModalDelete = false"/>
+    <Check :isVisible="showModalCheck" @close="showModalCheck = false" />
+    <Delete :isVisible="showModalDelete" :question="questionToDelete" @close="showModalDelete = false"
+      @deleteQuestion="handleDeleteQuestion" />
   </section>
 </template>
+
+<style scoped>
+p {
+  @apply text-blue;
+}
+</style>
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
@@ -44,6 +49,7 @@ import Delete from '@/components/Modal/Delete.vue';
 
 const showModalCheck = ref(false);
 const showModalDelete = ref(false);
+const questionToDelete = ref(null); // Armazena a pergunta a ser excluída
 const route = useRoute()
 const roomCode = ref(route.params.code)
 const questions = ref([])
@@ -67,9 +73,27 @@ const markAsRead = async (questionId) => {
   await fetchQuestions()
 }
 
-const handleDeleteQuestion = async (questionId) => {
-  await deleteQuestion(questionId)
-  await fetchQuestions()
+const openDeleteModal = (question) => {
+  questionToDelete.value = question;
+  showModalDelete.value = true;
+}
+
+const handleDeleteQuestion = async ({ question, password }) => {
+  try {
+    const result = await deleteQuestion({
+      id: question.id,
+      roomCode: roomCode.value,
+      password, // Envia a senha para o backend
+    });
+
+    if (result.success) {
+      questions.value = questions.value.filter(q => q.id !== question.id);
+    } else {
+      console.error(`Falha ao excluir pergunta:`, result.error);
+    }
+  } catch (error) {
+    console.error(`Erro ao excluir pergunta:`, error);
+  }
 }
 
 onMounted(fetchQuestions)
@@ -81,9 +105,3 @@ watch(() => route.params.code, (newCode) => {
   }
 })
 </script>
-
-<style scoped>
-p {
-  @apply text-blue;
-}
-</style>
