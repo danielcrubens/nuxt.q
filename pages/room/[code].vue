@@ -1,38 +1,23 @@
 <template>
   <HeaderRoom />
   <section class="lg:px-36 px-4">
-    <h1 class="title py-4">Faça suasdacdc pergunta</h1>
-    <FormQuestion @question-created="fetchQuestions" />
-    <Questions ref="questionsComponent" />
+    <h1 class="title py-4">Faça sua pergunta</h1>
+    <FormQuestion />
+    <Questions />
   </section>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-
-
-const route = useRoute()
-const router = useRouter()
-const roomCode = route.params.code
-const questionsComponent = ref(null)
-
-const isAuthenticated = computed(() => {
-  return !!localStorage.getItem(`room_${roomCode}`)
-})
-
-const fetchQuestions = () => {
-  questionsComponent.value?.fetchQuestions()
+<style>
+.title {
+  @apply lg:text-[28px] text-2xl font-bold text-blue;
 }
+</style>
 
-onMounted(() => {
-  if (!isAuthenticated.value) {
-    router.push('/')
-    return
-  }
-})
+<script setup>
+import Questions from '@/components/Section/Questions.vue';
 
 definePageMeta({
   layout: 'rooms',
+  middleware: ['auth']
 })
 </script>

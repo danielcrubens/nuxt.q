@@ -15,15 +15,9 @@ export default defineNuxtConfig({
       Poppins: [400, 500, 700],
     },
   },
-  /* prisma: {
-    clientOptions: {
-      datasources: {
-        db: {
-          url: 'file:./dev.db'
-        }
-      }
-    }
-  } */
     ssr: false,
+    router: {
+      middleware: ['auth']
+    },
 
 });
