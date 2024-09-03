@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="validateAndEnterRoom">
     <input v-model="roomCode"
-      class="mt-6 w-full rounded-lg border-solid border-2 text-blue border-gray-blue p-3 text-md shadow-sm placeholder-dark-blue"
+      class="mt-6 w-full bg-[#f6faff] rounded-lg border-solid border-2 text-blue border-gray-blue p-3 text-md shadow-sm placeholder-dark-blue"
       type="text" placeholder="Código da sala" />
     <p v-if="validationError" class="text-red-500 text-sm mt-0">{{ validationError }}</p>
     <button type="submit"
