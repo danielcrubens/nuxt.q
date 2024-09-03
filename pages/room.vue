@@ -6,6 +6,11 @@
    <Questions/>
   </section>
 </template>
+<style>
+.title {
+  @apply lg:text-[28px] text-2xl font-bold text-blue;
+}
+</style>
 
 <script setup>
 import Questions from '@/components/Section/Questions.vue';

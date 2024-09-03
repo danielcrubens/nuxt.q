@@ -30,16 +30,20 @@ export const useQuestion = () => {
     }
   }
 
-  const updateQuestion = async (id: string, isRead: boolean) => {
+  const updateQuestion = async (params: { id: string; isRead: boolean; roomCode: string; password: string }) => {
     try {
       const { data, error } = await useFetch('/api/update-question', {
         method: 'PUT',
-        body: { id, isRead },
+        body: params,
       })
 
       if (error.value) {
         console.error('Erro na requisição:', error.value)
-        throw new Error(error.value.message)
+        throw new Error(error.value.message || 'Erro ao atualizar pergunta')
+      }
+
+      if (!data.value.success) {
+        throw new Error(data.value.error || 'Falha ao atualizar pergunta')
       }
 
       return data.value

@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
   });
 
   if (!room || room.password !== password) {
-    return { success: false, error: 'Senha incorreta ou sala não encontrada' };
+    return { success: false, error: 'Erro ao excluir pergunta. Verifique a senha e tente novamente.' };
   }
 
   // Excluir a pergunta se a senha estiver correta

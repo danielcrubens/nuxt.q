@@ -7,7 +7,7 @@
     </div>
     <footer class="flex justify-between items-center">
       <div class="flex items-baseline text-[#a5b0c1]">
-        <LockKeyhole :size="18"/>
+        <LockKeyhole :size="17"/>
         <p class="text-sm">Esta pergunta é anônima</p>
       </div>
       <button class="px-10 flex justify-center items-center gap-2 rounded-lg bg-blue-100 p-3 font-medium text-md text-white transition hover:brightness-95 focus:outline-none">

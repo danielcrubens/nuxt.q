@@ -22,7 +22,7 @@
   </section>
 </template>
 
-<style>
+<style >
 .title {
   @apply lg:text-[28px] text-2xl font-bold text-blue;
 }
