@@ -1,6 +1,6 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "yarn install --production=false && yarn build",
   "outputDirectory": ".output",
   "framework": "nuxt3",
-  "installCommand": "npm install"
+  "installCommand": "yarn  install"
 }
