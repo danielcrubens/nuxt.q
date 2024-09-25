@@ -42,6 +42,7 @@ export default defineNuxtConfig({
     },
     prisma: {
       autoSetupPrisma: true,
+      clientUrl: process.env.DATABASE_URL,
     },
     vite: {
       resolve: {
