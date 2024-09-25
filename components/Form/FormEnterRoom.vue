@@ -6,7 +6,8 @@
     <p v-if="validationError" class="text-red-500 text-sm mt-0">{{ validationError }}</p>
     <button type="submit"
       class="w-full mt-6 flex justify-center items-center gap-2 rounded-lg bg-blue-100 p-3 font-medium text-lg text-white transition hover:brightness-95 focus:outline-none">
-      <LogIn />
+      <Loader v-if="isLoading" class="animate-spin"  :size="20"/>
+      <LogIn v-else />
       Entrar na sala
     </button>
   </form>
@@ -15,7 +16,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { LogIn } from 'lucide-vue-next'
+import { LogIn, Loader } from 'lucide-vue-next'
 import { useToast } from 'vue-toastification'
 import { z } from 'zod'
 
@@ -27,7 +28,8 @@ const passwordSchema = z
 
 const router = useRouter()
 const roomCode = ref('')
-const validationError = ref('') 
+const validationError = ref('')
+const isLoading = ref(false)
 const toast = useToast()
 
 const validateAndEnterRoom = async () => {
@@ -35,36 +37,40 @@ const validateAndEnterRoom = async () => {
   const validationResult = passwordSchema.safeParse(roomCode.value)
 
   if (!validationResult.success) {
-    // Exibe mensagem de erro na interface
     validationError.value = validationResult.error.issues[0].message
     return
   }
 
-  // Se a validação passar, continua com o processo de entrar na sala
-  const { data, error } = await useFetch('/api/enter-room', {
-    method: 'POST',
-    body: { code: roomCode.value },
-  })
+  isLoading.value = true
 
-  if (error.value) {
-    console.error('Erro ao entrar na sala:', error.value)
-    toast.error('Ocorreu um erro ao tentar entrar na sala', {
-      timeout: 3100,
-      position: 'bottom-right',
-      pauseOnFocusLoss: false,
-      pauseOnHover: false,
-      closeButton: false,
+  try {
+    const { data, error } = await useFetch('/api/enter-room', {
+      method: 'POST',
+      body: { code: roomCode.value },
     })
-  } else if (data.value) {
-    router.push(`/room/${roomCode.value}`)
-  } else {
-    toast.error('Sala não encontrada', {
-      timeout: 3100,
-      position: 'bottom-right',
-      pauseOnFocusLoss: false,
-      pauseOnHover: false,
-      closeButton: false,
-    })
+
+    if (error.value) {
+      console.error('Erro ao entrar na sala:', error.value)
+      toast.error('Ocorreu um erro ao tentar entrar na sala', {
+        timeout: 3100,
+        position: 'bottom-right',
+        pauseOnFocusLoss: false,
+        pauseOnHover: false,
+        closeButton: false,
+      })
+    } else if (data.value) {
+      router.push(`/room/${roomCode.value}`)
+    } else {
+      toast.error('Sala não encontrada', {
+        timeout: 3100,
+        position: 'bottom-right',
+        pauseOnFocusLoss: false,
+        pauseOnHover: false,
+        closeButton: false,
+      })
+    }
+  } finally {
+    isLoading.value = false
   }
 }
 </script>

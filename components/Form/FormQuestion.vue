@@ -11,7 +11,8 @@
         <p class="text-sm">Esta pergunta é anônima</p>
       </div>
       <button class="px-10 flex justify-center items-center gap-2 rounded-lg bg-blue-100 p-3 font-medium text-md text-white transition hover:brightness-95 focus:outline-none">
-        Enviar
+        <Loader v-if="isLoading" class="animate-spin"  :size="20" />
+        <span>Enviar</span>
       </button>
     </footer>
   </form>
@@ -21,7 +22,7 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useQuestion } from '@/composables/useQuestion'
-import { LockKeyhole } from 'lucide-vue-next'
+import { LockKeyhole, Loader } from 'lucide-vue-next'
 import { z } from 'zod'
 
 const questionSchema = z.string().min(1, 'O campo não pode estar vazio.')
@@ -31,6 +32,7 @@ const roomCode = route.params.code
 
 const question = ref('')
 const errorMessage = ref('')
+const isLoading = ref(false)
 const { createQuestion } = useQuestion()
 
 const sendQuestion = async () => {
@@ -41,16 +43,21 @@ const sendQuestion = async () => {
     return
   }
 
+  isLoading.value = true
+  errorMessage.value = ''
+
   try {
     const createdQuestion = await createQuestion(question.value, roomCode)
     question.value = ''
-    errorMessage.value = ''
     emit('question-created', createdQuestion)
 
     // Recarrega a página após o envio bem-sucedido da pergunta
     window.location.reload()
   } catch (error) {
     console.error('Erro ao enviar pergunta:', error)
+    errorMessage.value = 'Ocorreu um erro ao enviar a pergunta. Por favor, tente novamente.'
+  } finally {
+    isLoading.value = false
   }
 }
 
