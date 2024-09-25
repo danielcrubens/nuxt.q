@@ -23,7 +23,7 @@ export default defineNuxtConfig({
 
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss", "@nuxtjs/google-fonts", "@prisma/nuxt", "@vite-pwa/nuxt"],
+  modules: ["@nuxtjs/tailwindcss", "@nuxtjs/google-fonts", "@prisma/nuxt"],
 
   components: true,
 
@@ -40,8 +40,14 @@ export default defineNuxtConfig({
     router: {
       middleware: ['auth']
     },
-    nitro: {
-      preset: 'vercel-edge'
-    }
-
+    prisma: {
+      autoSetupPrisma: true,
+    },
+    vite: {
+      resolve: {
+        alias: {
+          '.prisma/client/index-browser': './node_modules/.prisma/client/index-browser.js',
+        },
+      },
+    },
 });
