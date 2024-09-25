@@ -14,3 +14,7 @@
 *:focus {
   outline: none;
 }
+html {
+  scroll-behavior: smooth;
+  background: #f6faff;
+}
