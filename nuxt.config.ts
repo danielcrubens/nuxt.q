@@ -7,23 +7,12 @@ export default defineNuxtConfig({
       },
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
-      title: 'Nuxt.Q - Interação Anônima através de Perguntas',
-      meta: [
-        { 
-          name: 'description', 
-          content: 'Nuxt.Q é uma plataforma de interação onde você pode criar salas para receber perguntas anônimas, gerenciar e marcar como lidas.'
-        },
-        {
-          name: 'keywords',
-          content: 'Nuxt.Q, perguntas anônimas, interação, Front-end, gerenciamento de perguntas'
-        }
-      ],
     }
   },
 
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss", "@nuxtjs/google-fonts", "@prisma/nuxt"],
+  modules: ["@nuxtjs/tailwindcss", "@nuxtjs/google-fonts", "@prisma/nuxt","@nuxtjs/seo"],
 
   components: true,
 
@@ -36,7 +25,7 @@ export default defineNuxtConfig({
       Poppins: [400, 500, 700],
     },
   },
-    ssr: false,
+    ssr: true,
     router: {
       middleware: ['auth']
     },
@@ -50,5 +39,11 @@ export default defineNuxtConfig({
           '.prisma/client/index-browser': './node_modules/.prisma/client/index-browser.js',
         },
       },
+    },
+    ogImage: {
+      fonts: ['Poppins:400', 'Poppins:500', 'Poppins:700'],
+    },
+    site: {
+      url: process.env.SITE_URL,
     },
 });
