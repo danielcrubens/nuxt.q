@@ -20,4 +20,11 @@ definePageMeta({
   layout: 'rooms',
   middleware: ['auth']
 })
+defineOgImage({
+  component: 'Main',
+  props: {
+    title: 'Nuxt.Q',
+    description: 'Plataforma interativa para criação de salas de perguntas anônimas',
+  },
+})
 </script>

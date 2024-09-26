@@ -22,4 +22,14 @@ const handleRoomCreated = (roomData) => {
   localStorage.setItem(`room_${roomData.id}`, roomData.password)
   router.push(`/room/${roomData.id}`)
 }
+defineOgImage({
+  component: 'Main',
+  props: {
+    title: 'Nuxt.Q',
+    description: 'Plataforma interativa para criação de salas de perguntas anônimas',
+  },
+})
+useHead({
+  title: 'Nuxt.Q - Crie sua sala',
+})
 </script>
