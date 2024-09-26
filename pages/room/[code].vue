@@ -14,7 +14,7 @@
 </style>
 
 <script setup>
-import Questions from '@/components/Section/Questions.vue';
+import Questions from '@/components/Section/Questions.vue'
 
 definePageMeta({
   layout: 'rooms',
