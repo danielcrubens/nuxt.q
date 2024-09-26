@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full flex flex-col justify-end items-center bg-no-repeat bg-auto bg-blue-100" >
-    <img src="/public/icon.svg" class="absolute inset-0  w-80 h-full object-contain" alt="logo"/>
+    <img src="@/icon.svg" class="absolute inset-0  w-80 h-full object-contain" alt="logo"/>
     <h1 class="font-bold text-6xl text-white">
       {{ props.title }}
     </h1>
