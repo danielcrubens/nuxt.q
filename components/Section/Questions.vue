@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div v-if="loading" class="fixed inset-0 bg-slate-900 bg-opacity-80 flex justify-center items-center z-50">
+    <div v-if="pending" class="fixed inset-0 bg-slate-900 bg-opacity-80 flex justify-center items-center z-50">
       <Spinner/>
     </div>
     <div v-else-if="questions.length > 0">
@@ -40,56 +40,41 @@
   </section>
 </template>
 
-<style scoped>
-p {
-  @apply text-blue;
-}
-
-</style>
-
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { User, Trash, CheckIcon } from 'lucide-vue-next'
 import { useQuestion } from '@/composables/useQuestion'
-import Check from '@/components/Modal/Check.vue';
-import Delete from '@/components/Modal/Delete.vue';
+import Check from '@/components/Modal/Check.vue'
+import Delete from '@/components/Modal/Delete.vue'
 import { useToast } from 'vue-toastification'
-import Spinner from '@/components/Loading/Spinner.vue';
+import Spinner from '@/components/Loading/Spinner.vue'
 
-const toast = useToast();
-const showModalCheck = ref(false);
-const showModalDelete = ref(false);
-const questionToDelete = ref(null);
-const questionToMarkAsRead = ref(null);
+const toast = useToast()
+const showModalCheck = ref(false)
+const showModalDelete = ref(false)
+const questionToDelete = ref(null)
+const questionToMarkAsRead = ref(null)
 const route = useRoute()
 const roomCode = ref(route.params.code)
-const questions = ref([])
-const loading = ref(true)
+
 const { getQuestions, updateQuestion, deleteQuestion } = useQuestion()
 
-const fetchQuestions = async () => {
-  loading.value = true
-  try {
-    const fetchedQuestions = await getQuestions(roomCode.value)
-    questions.value = fetchedQuestions
-  } catch (error) {
-    console.error('Erro ao buscar perguntas:', error)
-  } finally {
-    setTimeout(() => {
-      loading.value = false
-    }, 300) 
-  }
-}
+const { data: questions, pending, refresh } = useAsyncData(
+  'questions',
+  () => getQuestions(roomCode.value),
+  { server: true, lazy: false }
+)
 
 const openCheckModal = (question) => {
-  questionToMarkAsRead.value = question;
-  showModalCheck.value = true;
+  questionToMarkAsRead.value = question
+  showModalCheck.value = true
 }
 
 const handleMarkAsRead = async ({ question, password }) => {
   if (!question || !question.id) {
-    console.error("Pergunta não definida ou inválida:", question);
-    return;
+    console.error("Pergunta não definida ou inválida:", question)
+    return
   }
 
   try {
@@ -98,13 +83,10 @@ const handleMarkAsRead = async ({ question, password }) => {
       isRead: true,
       roomCode: roomCode.value,
       password,
-    });
+    })
 
     if (result.success) {
-      const questionToUpdate = questions.value.find(q => q.id === question.id);
-      if (questionToUpdate) {
-        questionToUpdate.isRead = true;
-      }
+      await refresh()
       toast.success('Pergunta marcada como lida com sucesso!', {
         timeout: 3100,
         position: 'bottom-right',
@@ -113,27 +95,26 @@ const handleMarkAsRead = async ({ question, password }) => {
         closeButton: false,
       })
     }
-
   } catch (error) {
     toast.error('Erro ao marcar pergunta como lida. Tente novamente mais tarde.', {
-        timeout: 3100,
-        position: 'bottom-right',
-        pauseOnFocusLoss: false,
-        pauseOnHover: false,
-        closeButton: false,
-      })
+      timeout: 3100,
+      position: 'bottom-right',
+      pauseOnFocusLoss: false,
+      pauseOnHover: false,
+      closeButton: false,
+    })
   }
 }
 
 const openDeleteModal = (question) => {
-  questionToDelete.value = question;
-  showModalDelete.value = true;
+  questionToDelete.value = question
+  showModalDelete.value = true
 }
 
 const handleDeleteQuestion = async ({ question, password }) => {
   if (!question || !question.id) {
-    console.error("Pergunta não definida ou inválida:", question);
-    return;
+    console.error("Pergunta não definida ou inválida:", question)
+    return
   }
 
   try {
@@ -141,10 +122,10 @@ const handleDeleteQuestion = async ({ question, password }) => {
       id: question.id,
       roomCode: roomCode.value,
       password,
-    });
+    })
 
     if (result.success) {
-      questions.value = questions.value.filter(q => q.id !== question.id);
+      await refresh()
       toast.success('Pergunta excluída com sucesso!', {
         timeout: 3100,
         position: 'bottom-right',
@@ -153,7 +134,7 @@ const handleDeleteQuestion = async ({ question, password }) => {
         closeButton: false,
       })
     } else {
-      throw new Error(result.error || 'Falha ao excluir pergunta');
+      throw new Error(result.error || 'Falha ao excluir pergunta')
     }
   } catch (error) {
     toast.error(error.message || 'Erro ao excluir pergunta. Verifique a senha e tente novamente.', {
@@ -166,12 +147,16 @@ const handleDeleteQuestion = async ({ question, password }) => {
   }
 }
 
-onMounted(fetchQuestions)
-
 watch(() => route.params.code, (newCode) => {
   if (newCode !== roomCode.value) {
     roomCode.value = newCode
-    fetchQuestions()
+    refresh()
   }
 })
 </script>
+
+<style scoped>
+p {
+  @apply text-blue;
+}
+</style>

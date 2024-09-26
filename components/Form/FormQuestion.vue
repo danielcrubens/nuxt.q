@@ -50,8 +50,6 @@ const sendQuestion = async () => {
     const createdQuestion = await createQuestion(question.value, roomCode)
     question.value = ''
     emit('question-created', createdQuestion)
-
-    // Recarrega a página após o envio bem-sucedido da pergunta
     window.location.reload()
   } catch (error) {
     console.error('Erro ao enviar pergunta:', error)
