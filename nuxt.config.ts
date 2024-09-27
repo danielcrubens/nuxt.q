@@ -12,7 +12,7 @@ export default defineNuxtConfig({
 
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss", "@nuxtjs/google-fonts", "@prisma/nuxt","@nuxtjs/seo"],
+  modules: ["@nuxtjs/tailwindcss", "@nuxtjs/google-fonts", "@prisma/nuxt","@nuxtjs/seo", "nuxt-og-image"],
 
   components: true,
 
@@ -42,6 +42,8 @@ export default defineNuxtConfig({
     },
     ogImage: {
       fonts: ['Poppins:400', 'Poppins:500', 'Poppins:700'],
+      siteUrl: process.env.SITE_URL,
+      runtimeCaching: true,
     },
     site: {
       url: process.env.SITE_URL,
