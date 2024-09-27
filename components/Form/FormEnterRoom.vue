@@ -17,7 +17,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { LogIn, Loader } from 'lucide-vue-next'
-import { useToast } from 'vue-toastification'
+import { useToast } from 'vue-toastification/dist/index.mjs'
 import { z } from 'zod'
 
 const passwordSchema = z

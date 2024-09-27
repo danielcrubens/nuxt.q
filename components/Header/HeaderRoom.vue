@@ -20,8 +20,7 @@
 import { useRoute } from 'vue-router';
 import Logo from './Logo.vue';
 import { Users, Copy } from 'lucide-vue-next';
-import { useToast } from 'vue-toastification';
-
+import { useToast } from 'vue-toastification/dist/index.mjs'
 
 const route = useRoute();
 const roomCode = route.params.code;

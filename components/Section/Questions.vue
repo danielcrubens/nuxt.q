@@ -47,7 +47,7 @@ import { User, Trash, CheckIcon } from 'lucide-vue-next'
 import { useQuestion } from '@/composables/useQuestion'
 import Check from '@/components/Modal/Check.vue'
 import Delete from '@/components/Modal/Delete.vue'
-import { useToast } from 'vue-toastification'
+import { useToast } from 'vue-toastification/dist/index.mjs'
 import Spinner from '@/components/Loading/Spinner.vue'
 
 const toast = useToast()
